@@ -1,0 +1,6 @@
+{
+  "name": "Royal Harvest Order Management System",
+  "description": "An interactive restaurant order router including standalone Handheld Waiter Pads, Kitchen Display System (KDS) monitors, and Cashier terminals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

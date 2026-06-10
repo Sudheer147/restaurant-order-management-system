@@ -1,0 +1,50 @@
+declare module 'lucide-react' {
+  type IconProps = {
+    className?: string;
+    [key: string]: any;
+  };
+
+  export const Receipt: (props: IconProps) => any;
+  export const CreditCard: (props: IconProps) => any;
+  export const IndianRupee: (props: IconProps) => any;
+  export const Smartphone: (props: IconProps) => any;
+  export const CheckCircle: (props: IconProps) => any;
+  export const CheckCircle2: (props: IconProps) => any;
+  export const AlertCircle: (props: IconProps) => any;
+  export const XCircle: (props: IconProps) => any;
+  export const HelpCircle: (props: IconProps) => any;
+  export const FileCode: (props: IconProps) => any;
+  export const GitBranch: (props: IconProps) => any;
+  export const Terminal: (props: IconProps) => any;
+  export const Cpu: (props: IconProps) => any;
+  export const ShieldCheck: (props: IconProps) => any;
+  export const Info: (props: IconProps) => any;
+  export const BookOpen: (props: IconProps) => any;
+  export const Database: (props: IconProps) => any;
+  export const Workflow: (props: IconProps) => any;
+  export const GitMerge: (props: IconProps) => any;
+  export const ShieldAlert: (props: IconProps) => any;
+  export const Layers: (props: IconProps) => any;
+  export const Server: (props: IconProps) => any;
+  export const Code: (props: IconProps) => any;
+  export const Check: (props: IconProps) => any;
+  export const UtensilsCrossed: (props: IconProps) => any;
+  export const Volume2: (props: IconProps) => any;
+  export const ChefHat: (props: IconProps) => any;
+  export const Sparkles: (props: IconProps) => any;
+  export const ShoppingBag: (props: IconProps) => any;
+  export const Users: (props: IconProps) => any;
+  export const Trophy: (props: IconProps) => any;
+  export const Activity: (props: IconProps) => any;
+  export const Printer: (props: IconProps) => any;
+  export const UsersIcon: (props: IconProps) => any;
+  export const Plus: (props: IconProps) => any;
+  export const Minus: (props: IconProps) => any;
+  export const Trash2: (props: IconProps) => any;
+  export const Search: (props: IconProps) => any;
+  export const Utensils: (props: IconProps) => any;
+  export const AlertTriangle: (props: IconProps) => any;
+  export const Clock: (props: IconProps) => any;
+  export const Flame: (props: IconProps) => any;
+  export const Leaf: (props: IconProps) => any;
+}

@@ -1,0 +1,52 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "module": "ESNext",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "typeRoots": [
+      "src/stubs",
+      "node_modules/@types"
+    ],
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "react": [
+        "./src/stubs/react"
+      ],
+      "react/jsx-runtime": [
+        "./src/stubs/react/jsx-runtime"
+      ],
+      "react-dom/client": [
+        "./src/stubs/react-dom/client"
+      ],
+      "lucide-react": [
+        "./src/stubs/lucide-react.d.ts"
+      ],
+      "lucide-react/*": [
+        "./src/stubs/lucide-react.d.ts"
+      ]
+    },
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  },
+  "ignoreDeprecations": "6.0",
+  "include": [
+    "src/**/*.d.ts",
+    "src/react-shims.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ]
+}

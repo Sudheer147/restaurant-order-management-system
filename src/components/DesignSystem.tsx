@@ -27,20 +27,20 @@ export default function DesignSystem() {
   };
 
   const colors = [
-    { name: 'Obsidian Black (Background)', hex: '#030504', role: 'Main dark mode canvas background' },
-    { name: 'Champagne Gold (Primary Accent)', hex: '#dfb750', role: 'Brand hero focus, primary button and highlight borders' },
-    { name: 'Muted Gold (Secondary Accent)', hex: '#bda054', role: 'Secondary states, subtle focus outlines' },
-    { name: 'Deep Charcoal (Surface / Panel)', hex: '#0a0f0d', role: 'Glassmorphic card bases, navigation backdrop' },
-    { name: 'Light Gray (Foreground Text)', hex: '#f4f6f5', role: 'High readability primary body and headings' },
-    { name: 'Muted Text (Opacity Guard)', hex: 'rgba(244, 246, 245, 0.65)', role: 'Subtle paragraph structures, timestamps' },
-    { name: 'Gold Border (Soft Glow)', hex: 'rgba(223, 183, 80, 0.12)', role: 'Glassmorphic cards hairline strokes' },
+    { name: 'Pure White (Background)', hex: '#ffffff', role: 'Main premium light mode canvas background' },
+    { name: 'Vibrant Yellow (Primary Accent)', hex: '#eab308', role: 'Brand hero focus, primary button and highlight borders' },
+    { name: 'Muted Accent (Secondary Accent)', hex: '#ca8a04', role: 'Secondary states, subtle focus outlines' },
+    { name: 'Light Gray (Surface / Panel)', hex: '#f4f6f5', role: 'Glassmorphic card bases, panel background' },
+    { name: 'Deep Black (Foreground Text)', hex: '#000000', role: 'High readability primary body and headings' },
+    { name: 'Muted Text (Opacity Guard)', hex: 'rgba(0, 0, 0, 0.65)', role: 'Subtle paragraph structures, timestamps' },
+    { name: 'Yellow Border (Soft Glow)', hex: 'rgba(234, 179, 8, 0.16)', role: 'Glassmorphic cards hairline strokes' },
   ];
 
   const typography = [
-    { tag: 'h1', name: 'Display / Large Heading', font: 'Cormorant Garamond', weight: '600 / Semi-Bold', spacing: '-0.02em', size: 'clamp(2.5rem, 6vw, 4rem)', sample: 'The Art of Organic Gastronomy' },
-    { tag: 'h2', name: 'Section Heading', font: 'Cormorant Garamond', weight: '500 / Medium', spacing: '-0.01em', size: 'clamp(2rem, 4.5vw, 2.75rem)', sample: 'Curated Seasonal Plates' },
-    { tag: 'h3', name: 'Subsection Title', font: 'Cormorant Garamond', weight: '500 / Medium', spacing: 'Normal', size: 'clamp(1.35rem, 3vw, 1.8rem)', sample: 'Wine Estates Cellar Selection' },
-    { tag: 'body', name: 'Body Paragraph Text', font: 'Plus Jakarta Sans', weight: '300 / Light', spacing: '0.01em', size: '0.9375rem / 15px', sample: 'Indulge in a premium farm-to-table culinary narrative. We craft seasonal, organic menus sourced straight from local fields and cook with artisanal passion in our estate kitchen.' },
+    { tag: 'h1', name: 'Display / Large Heading', font: 'Plus Jakarta Sans', weight: '700 / Bold', spacing: '-0.02em', size: 'clamp(2.5rem, 6vw, 4rem)', sample: 'The Art of Organic Gastronomy' },
+    { tag: 'h2', name: 'Section Heading', font: 'Plus Jakarta Sans', weight: '700 / Bold', spacing: '-0.01em', size: 'clamp(2rem, 4.5vw, 2.75rem)', sample: 'Curated Seasonal Plates' },
+    { tag: 'h3', name: 'Subsection Title', font: 'Plus Jakarta Sans', weight: '600 / Semi-Bold', spacing: 'Normal', size: 'clamp(1.35rem, 3vw, 1.8rem)', sample: 'Wine Estates Cellar Selection' },
+    { tag: 'body', name: 'Body Paragraph Text', font: 'Plus Jakarta Sans', weight: '400 / Regular', spacing: '0.01em', size: '0.9375rem / 15px', sample: 'Indulge in a premium farm-to-table culinary narrative. We craft seasonal, organic menus sourced straight from local fields and cook with artisanal passion in our estate kitchen.' },
     { tag: 'small', name: 'System Mono Labels', font: 'JetBrains Mono', weight: '500 / Medium', spacing: '0.12em', size: '0.75rem / 12px', sample: 'ORDER_STATUS: PREPARING_LINE' },
   ];
 
@@ -55,24 +55,25 @@ export default function DesignSystem() {
 
   const codeSnippets = {
     cssVariables: `:root {
-  color-scheme: dark;
-  --restaurant-black: #030504;
-  --restaurant-surface: #0a0f0d;
-  --restaurant-panel: #101613;
-  --restaurant-border: rgba(223, 183, 80, 0.12);
-  --restaurant-border-strong: rgba(223, 183, 80, 0.25);
-  --restaurant-accent: #dfb750;
-  --restaurant-accent-soft: rgba(223, 183, 80, 0.08);
-  --restaurant-accent-strong: rgba(223, 183, 80, 0.2);
-  --restaurant-foreground: #f4f6f5;
-  --restaurant-muted: rgba(244, 246, 245, 0.65);
+  color-scheme: light;
+  --restaurant-bg: #ffffff;
+  --restaurant-black: #000000;
+  --restaurant-surface: #f4f6f5;
+  --restaurant-panel: #eaecea;
+  --restaurant-border: rgba(234, 179, 8, 0.16);
+  --restaurant-border-strong: rgba(234, 179, 8, 0.35);
+  --restaurant-accent: #eab308;
+  --restaurant-accent-soft: rgba(234, 179, 8, 0.08);
+  --restaurant-accent-strong: rgba(234, 179, 8, 0.22);
+  --restaurant-foreground: #000000;
+  --restaurant-muted: rgba(0, 0, 0, 0.65);
   
-  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-serif: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-  --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }`,
-    fontImport: `@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,750&display=swap');`,
+    fontImport: `@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,750&display=swap');`,
     tailwindConfig: `/** @type {import('tailwindcss').Config} */
 export default {
   theme: {
@@ -109,7 +110,7 @@ export default {
           Royal Harvest Premium Design System
         </h2>
         <p className="text-slate-400 text-xs mt-1 max-w-3xl leading-relaxed">
-          The aesthetic foundation of Royal Harvest: a luxury-grade, minimal digital design language inspired by high-end estate hospitality. Contrasting fine serif lettering with modern spacious sans-serif layouts.
+          The aesthetic foundation of Royal Harvest: a luxury-grade, minimal digital design language inspired by high-end estate hospitality. Utilizing modern spacious sans-serif typography across all layouts.
         </p>
       </div>
 
@@ -121,7 +122,7 @@ export default {
         </div>
         
         <p className="text-xs text-slate-400 max-w-3xl">
-          We establish a classic luxury serif for major display headings, coupled with a highly clean sans-serif built with warm geometry for body descriptions, ensuring clean premium readability.
+          We establish a bold, modern sans-serif for major display headings, ensuring premium readability and high legibility.
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -157,7 +158,7 @@ export default {
               <span className="font-bold text-slate-300">Design Recommendations:</span>
               <ul className="list-disc pl-4 space-y-1 text-[11px] leading-relaxed">
                 <li>Tight letter-spacing (<code className="text-amber-400 font-mono">-0.02em</code>) on headers creates high-fashion impact.</li>
-                <li>Relaxed line height (<code className="text-amber-400 font-mono">1.65</code>) on body text maintains reading comfort on dark canvases.</li>
+                <li>Relaxed line height (<code className="text-amber-400 font-mono">1.65</code>) on body text maintains reading comfort on light canvases.</li>
                 <li>Never mix more than two display weights in a single section.</li>
               </ul>
             </div>
@@ -173,7 +174,7 @@ export default {
         </div>
 
         <p className="text-xs text-slate-400 max-w-3xl">
-          An ultra-premium minimal palette. Deep black charcoal backgrounds create high contrast with premium champagne gold leaf indicators. Hover on any color swatch to copy its HEX value.
+          An ultra-premium minimal palette. Pure white backgrounds create high contrast with premium vibrant yellow indicators. Hover on any color swatch to copy its HEX value.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">

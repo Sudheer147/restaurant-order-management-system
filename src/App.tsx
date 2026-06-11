@@ -372,7 +372,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-amber-900 selection:text-amber-100 font-sans">
+    <div className="min-h-screen bg-[color:var(--restaurant-bg)] text-[color:var(--restaurant-foreground)] flex flex-col justify-between selection:bg-amber-100 selection:text-amber-900 font-sans">
       {activeTab !== 'splash' && (
         <header className={`glass-nav px-6 py-4 sticky top-0 z-50 animate-fade-in ${isScrolled ? 'glass-nav-scrolled' : ''}`}>
           <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4">

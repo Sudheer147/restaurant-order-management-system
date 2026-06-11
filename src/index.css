@@ -2,20 +2,31 @@
 @import "tailwindcss";
 
 :root {
-  color-scheme: dark;
-  --restaurant-black: #050706;
-  --restaurant-surface: #0a0f0d;
-  --restaurant-panel: #101613;
-  --restaurant-border: rgba(223, 183, 80, 0.12);
-  --restaurant-border-strong: rgba(223, 183, 80, 0.25);
-  --restaurant-accent: #dfb750;
-  --restaurant-accent-soft: rgba(223, 183, 80, 0.08);
-  --restaurant-accent-strong: rgba(223, 183, 80, 0.2);
-  --restaurant-foreground: #f4f6f5;
-  --restaurant-muted: rgba(244, 246, 245, 0.65);
-  --restaurant-muted-strong: rgba(244, 246, 245, 0.5);
-  --restaurant-muted-light: rgba(244, 246, 245, 0.25);
-  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  color-scheme: light;
+  --restaurant-bg: #ffffff;
+  --restaurant-black: #000000;
+  --restaurant-surface: #f4f6f5;
+  --restaurant-panel: #eaecea;
+  --restaurant-border: rgba(234, 179, 8, 0.16);
+  --restaurant-border-strong: rgba(234, 179, 8, 0.35);
+  --restaurant-accent: #eab308;
+  --restaurant-accent-soft: rgba(234, 179, 8, 0.08);
+  --restaurant-accent-strong: rgba(234, 179, 8, 0.22);
+  --restaurant-foreground: #000000;
+  --restaurant-muted: rgba(0, 0, 0, 0.65);
+  --restaurant-muted-strong: rgba(0, 0, 0, 0.45);
+  --restaurant-muted-light: rgba(0, 0, 0, 0.2);
+  
+  --restaurant-card-bg: rgba(244, 246, 245, 0.55);
+  --restaurant-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+  --restaurant-shadow-hover: 0 12px 48px rgba(234, 179, 8, 0.08);
+  
+  --restaurant-nav-bg: rgba(255, 255, 255, 0.72);
+  --restaurant-nav-scrolled-bg: rgba(255, 255, 255, 0.92);
+  --restaurant-nav-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+  --restaurant-nav-scrolled-shadow: 0 6px 36px rgba(0, 0, 0, 0.08);
+
+  --font-serif: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -24,7 +35,7 @@
 html,
 body {
   min-height: 100%;
-  background-color: var(--restaurant-black);
+  background-color: var(--restaurant-bg);
   color: var(--restaurant-foreground);
   font-family: var(--font-sans);
   scroll-behavior: smooth;
@@ -32,8 +43,8 @@ body {
 }
 
 body {
-  background: var(--restaurant-black);
-  background-image: radial-gradient(circle at 50% 0%, rgba(223, 183, 80, 0.04) 0%, transparent 60%);
+  background: var(--restaurant-bg);
+  background-image: radial-gradient(circle at 50% 0%, rgba(223, 183, 80, 0.06) 0%, transparent 60%);
 }
 
 ::selection {
@@ -47,7 +58,7 @@ body {
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--restaurant-black);
+  background: var(--restaurant-bg);
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(223, 183, 80, 0.15);
@@ -61,28 +72,30 @@ body {
 /* Typography Headings Class Pairings */
 h1, h2, h3, .font-serif-luxury {
   font-family: var(--font-serif);
-  letter-spacing: -0.01em;
-  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-weight: 700;
   line-height: 1.15;
 }
 
 h1 {
   font-size: clamp(2.5rem, 6vw, 4rem);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 h2 {
   font-size: clamp(2rem, 4.5vw, 2.75rem);
+  font-weight: 700;
 }
 
 h3 {
   font-size: clamp(1.35rem, 3vw, 1.8rem);
+  font-weight: 600;
 }
 
 p {
   line-height: 1.65;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 /* Button UI Components */
@@ -107,9 +120,9 @@ p {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(223, 183, 80, 0.25);
-  background-color: #f7ce64;
-  border-color: #f7ce64;
+  box-shadow: 0 6px 24px rgba(234, 179, 8, 0.35);
+  background-color: #facc15;
+  border-color: #facc15;
 }
 
 .btn-primary:active {
@@ -187,17 +200,17 @@ p {
 
 /* Glassmorphic Panel Cards */
 .glass-card {
-  background: rgba(10, 15, 13, 0.45);
+  background: var(--restaurant-card-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--restaurant-border);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--restaurant-shadow);
   transition: var(--transition-smooth);
 }
 
 .glass-card:hover {
   border-color: var(--restaurant-border-strong);
-  box-shadow: 0 12px 48px rgba(223, 183, 80, 0.03);
+  box-shadow: var(--restaurant-shadow-hover);
 }
 
 /* Image Zoom Wrapper */
@@ -219,20 +232,20 @@ p {
 
 /* Navigation Header transitions */
 .glass-nav {
-  background: rgba(3, 5, 4, 0.72);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--restaurant-border);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
   transition: var(--transition-smooth);
 }
 
 .glass-nav-scrolled {
-  background: rgba(3, 5, 4, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-bottom: 1px solid rgba(223, 183, 80, 0.2) !important;
-  box-shadow: 0 6px 36px rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid rgba(234, 179, 8, 0.2) !important;
+  box-shadow: 0 6px 36px rgba(0, 0, 0, 0.08);
 }
 
 /* Premium Navbar Links & Hover States */
@@ -253,7 +266,7 @@ p {
 }
 
 .nav-link:hover {
-  color: var(--restaurant-foreground);
+  color: var(--restaurant-accent);
 }
 
 .nav-link::after {
@@ -301,7 +314,7 @@ p {
 }
 
 .sub-nav-link:hover {
-  color: var(--restaurant-foreground);
+  color: var(--restaurant-accent);
 }
 
 .sub-nav-link::after {
@@ -347,7 +360,7 @@ p {
 }
 
 .sidebar-link:hover {
-  color: var(--restaurant-foreground);
+  color: var(--restaurant-accent);
   border-left-color: var(--restaurant-border-strong);
   background-color: var(--restaurant-accent-soft);
 }
@@ -361,6 +374,7 @@ p {
 
 
 /* Overrides for standard tailwind components */
+.bg-slate-955,
 .bg-slate-950,
 .bg-slate-900,
 .bg-slate-950\/40,
@@ -383,7 +397,7 @@ p {
 }
 
 .text-slate-200 {
-  color: rgba(244, 246, 245, 0.9) !important;
+  color: rgba(0, 0, 0, 0.9) !important;
 }
 
 .text-slate-305,
@@ -400,6 +414,7 @@ p {
   color: var(--restaurant-muted-strong) !important;
 }
 
+.bg-amber-650,
 .bg-amber-600,
 .bg-amber-505,
 .bg-amber-500,
@@ -425,18 +440,40 @@ p {
   border-color: var(--restaurant-accent) !important;
 }
 
-.bg-amber-950\/40,
-.bg-amber-950\/20,
-.bg-amber-950\/80 {
+.bg-amber-955\/40,
+.bg-amber-955\/20,
+.bg-amber-955\/80 {
   background-color: var(--restaurant-accent-soft) !important;
 }
 
+/* Light Mode Badge Colors overrides to prevent dark backgrounds */
 .bg-emerald-950\/80,
 .bg-emerald-950\/20,
 .bg-emerald-950\/40,
 .bg-emerald-600,
 .bg-emerald-700,
 .bg-emerald-800 {
+  background-color: rgba(16, 185, 129, 0.08) !important;
+  color: #047857 !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+}
+
+.bg-red-950\/50,
+.bg-red-950\/80,
+.bg-red-950\/40,
+.bg-red-950\/20,
+.bg-red-600,
+.bg-red-700,
+.bg-red-800 {
+  background-color: rgba(239, 68, 68, 0.08) !important;
+  color: #b91c1c !important;
+  border: 1px solid rgba(239, 68, 68, 0.25) !important;
+}
+
+.bg-amber-950\/30,
+.bg-amber-950\/80,
+.bg-amber-950\/70,
+.bg-amber-950\/50 {
   background-color: var(--restaurant-accent-soft) !important;
   color: var(--restaurant-accent) !important;
   border: 1px solid var(--restaurant-border-strong) !important;

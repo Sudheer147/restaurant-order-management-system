@@ -39,21 +39,21 @@ export default function EngineeringManual() {
         <div className="xl:col-span-3 space-y-2">
           <div className="bg-slate-950 p-4 rounded-none border border-slate-850 space-y-4">
             <h4 className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">Technical Guide Index</h4>
-            <nav className="space-y-1 text-[10px]">
-              <a href="#section-arch" className="flex items-center gap-2 p-2 rounded-none hover:bg-slate-900 text-slate-400 hover:text-amber-400 font-bold uppercase tracking-wider transition-all border border-transparent hover:border-slate-850">
-                <Cpu className="w-3.5 h-3.5 text-slate-500" /> System Architecture
+            <nav className="space-y-1">
+              <a href="#section-arch" className="sidebar-link">
+                System Architecture
               </a>
-              <a href="#section-schema" className="flex items-center gap-2 p-2 rounded-none hover:bg-slate-900 text-slate-400 hover:text-amber-400 font-bold uppercase tracking-wider transition-all border border-transparent hover:border-slate-850">
-                <Database className="w-3.5 h-3.5 text-slate-500" /> Data Schema Def
+              <a href="#section-schema" className="sidebar-link">
+                Data Schema Def
               </a>
-              <a href="#section-api" className="flex items-center gap-2 p-2 rounded-none hover:bg-slate-900 text-slate-400 hover:text-amber-400 font-bold uppercase tracking-wider transition-all border border-transparent hover:border-slate-850">
-                <Workflow className="w-3.5 h-3.5 text-slate-500" /> API Integration
+              <a href="#section-api" className="sidebar-link">
+                API Integration
               </a>
-              <a href="#section-cicd" className="flex items-center gap-2 p-2 rounded-none hover:bg-slate-900 text-slate-400 hover:text-amber-400 font-bold uppercase tracking-wider transition-all border border-transparent hover:border-slate-850">
-                <GitMerge className="w-3.5 h-3.5 text-slate-500" /> CI/CD Pipelines
+              <a href="#section-cicd" className="sidebar-link">
+                CI/CD Pipelines
               </a>
-              <a href="#section-monitor" className="flex items-center gap-2 p-2 rounded-none hover:bg-slate-900 text-slate-400 hover:text-amber-400 font-bold uppercase tracking-wider transition-all border border-transparent hover:border-slate-850">
-                <Activity className="w-3.5 h-3.5 text-slate-500" /> Live Monitoring
+              <a href="#section-monitor" className="sidebar-link">
+                Live Monitoring
               </a>
             </nav>
           </div>

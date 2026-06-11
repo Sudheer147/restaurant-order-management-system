@@ -300,7 +300,7 @@ export default function WaiterStation({
           </div>
 
           {/* Category Pills */}
-          <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+          <div className="flex gap-1 overflow-x-auto pb-1 scrollbar-none border-b border-slate-850">
             {categories.map((cat) => {
               const active = selectedCategory === cat;
               return (
@@ -308,11 +308,7 @@ export default function WaiterStation({
                   id={`btn-category-${cat.replace(' ', '_')}`}
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-none cursor-pointer whitespace-nowrap transition-all border ${
-                    active 
-                      ? 'bg-amber-600 text-slate-950 border-amber-500 shadow-none font-bold' 
-                      : 'bg-slate-950 text-slate-400 border-slate-800 hover:bg-slate-800 hover:text-slate-100'
-                  }`}
+                  className={`sub-nav-link ${active ? 'sub-nav-link-active' : ''}`}
                 >
                   {cat}
                 </button>

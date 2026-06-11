@@ -1,0 +1,30 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gold circular background -->
+  <circle cx="100" cy="100" r="95" fill="#F59E0B" opacity="0.15" stroke="#F59E0B" stroke-width="2"/>
+  
+  <!-- Crown points -->
+  <g fill="#F59E0B">
+    <!-- Left point -->
+    <polygon points="60,120 50,70 70,90"/>
+    <!-- Center point (tallest) -->
+    <polygon points="100,60 85,100 115,100"/>
+    <!-- Right point -->
+    <polygon points="140,120 130,90 150,70"/>
+  </g>
+  
+  <!-- Wheat/harvest stalks -->
+  <g stroke="#F59E0B" stroke-width="2.5" fill="none">
+    <!-- Left stalk -->
+    <path d="M 70 130 Q 65 115 60 100" stroke-linecap="round"/>
+    <path d="M 70 130 L 55 145"/>
+    <!-- Center stalk -->
+    <path d="M 100 140 Q 100 120 100 100" stroke-linecap="round"/>
+    <path d="M 100 140 L 100 160"/>
+    <!-- Right stalk -->
+    <path d="M 130 130 Q 135 115 140 100" stroke-linecap="round"/>
+    <path d="M 130 130 L 145 145"/>
+  </g>
+  
+  <!-- Decorative base circle -->
+  <circle cx="100" cy="100" r="85" fill="none" stroke="#F59E0B" stroke-width="1.5" opacity="0.5"/>
+</svg>

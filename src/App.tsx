@@ -13,6 +13,8 @@ import KitchenDisplay from './components/KitchenDisplay';
 import BillingStation from './components/BillingStation';
 import SimTestingSuite from './components/SimTestingSuite';
 import EngineeringManual from './components/EngineeringManual';
+import DesignSystem from './components/DesignSystem';
+import royalHarvestLogo from '../assets/royal-harvest-logo.svg';
 
 // Lightweight local icon placeholders to avoid dependency on `lucide-react` during type fixes
 const Crown = (props: any) => <span {...props}>👑</span>;
@@ -27,6 +29,7 @@ const UtensilsCrossed = (props: any) => <span {...props}>🍽️</span>;
 const RotateCcw = (props: any) => <span {...props}>↺</span>;
 const RefreshCw = (props: any) => <span {...props}>🔄</span>;
 const Heart = (props: any) => <span {...props}>❤️</span>;
+const Sparkles = (props: any) => <span {...props}>✨</span>;
 
 // Pre-initialize static table boundaries
 const STATIC_TABLES: TableState[] = [
@@ -77,9 +80,52 @@ const INITIAL_STOCK: Record<string, number> = {
 };
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'simulator' | 'waiter' | 'kitchen' | 'billing' | 'testing' | 'specs'>('simulator');
+  const [activeTab, setActiveTab] = useState<'splash' | 'welcome' | 'simulator' | 'waiter' | 'kitchen' | 'billing' | 'testing' | 'specs' | 'design'>('splash');
   const [orders, setOrders] = useState<Order[]>([]);
   const [itemStock, setItemStock] = useState<Record<string, number>>(INITIAL_STOCK);
+  const [countdown, setCountdown] = useState(5);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Reservation Form States
+  const [reserveName, setReserveName] = useState('');
+  const [reserveGuests, setReserveGuests] = useState(2);
+  const [reserveDate, setReserveDate] = useState('');
+  const [reserveTime, setReserveTime] = useState('');
+  const [reserveMessage, setReserveMessage] = useState<string | null>(null);
+  const [reserveError, setReserveError] = useState<string | null>(null);
+
+  // Monitor scroll height for navbar opacity transition
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Auto-redirect from splash page after 5 seconds to the welcome index page
+  useEffect(() => {
+    if (activeTab !== 'splash') return;
+    setCountdown(5);
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setActiveTab('welcome');
+          return 5;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [activeTab]);
 
   // 1. Initial hydration from LocalStorage on mount
   useEffect(() => {
@@ -257,6 +303,66 @@ export default function App() {
     saveOrders(updatedOrders);
   };
 
+  // Reservation seating allocator logic: seats name, count and allocates fitting vacant table
+  const handleMakeReservation = (e: React.FormEvent) => {
+    e.preventDefault();
+    setReserveError(null);
+    setReserveMessage(null);
+
+    if (!reserveName || !reserveDate || !reserveTime) {
+      setReserveError('Please fill out all reservation fields.');
+      return;
+    }
+
+    // Find available tables with capacity >= guests
+    const availableTables = tables.filter(t => t.status === 'Available' && t.capacity >= reserveGuests);
+    if (availableTables.length === 0) {
+      setReserveError(`No tables with capacity for ${reserveGuests} guests are currently vacant.`);
+      return;
+    }
+
+    // Sort by smallest capacity first to optimize restaurant seating
+    availableTables.sort((a, b) => a.capacity - b.capacity);
+    const assignedTable = availableTables[0];
+
+    // Build draft pre-seated order
+    const newOrder: Order = {
+      id: `ord_${Date.now()}_${assignedTable.number}`,
+      tableId: assignedTable.number,
+      items: [
+        {
+          id: `ln_${Date.now()}_water`,
+          menuItemId: 'item_24',
+          name: 'Sparkling Mineral Water',
+          category: 'Beverages',
+          price: 150.00,
+          quantity: 1,
+          status: 'Preparing'
+        }
+      ],
+      status: 'Ordered',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      notes: `Reserved for ${reserveName} (${reserveGuests} Guests) at ${reserveTime} on ${reserveDate}`,
+      isPaid: false,
+      subtotal: 150.00,
+      tax: 7.50,
+      serviceCharge: 7.50,
+      total: 165.00
+    };
+
+    // Allocate order to lock table
+    handleAddOrder(newOrder);
+
+    setReserveMessage(`Reservation confirmed! We have reserved Table ${assignedTable.number} (Capacity: ${assignedTable.capacity}) for ${reserveName}.`);
+    
+    // Clear inputs
+    setReserveName('');
+    setReserveGuests(2);
+    setReserveDate('');
+    setReserveTime('');
+  };
+
   // Purge/Reset entire ecosystem (Testing or demo wash)
   const handleResetAll = () => {
     setOrders([]);
@@ -267,127 +373,569 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-amber-900 selection:text-amber-100 font-sans">
-      
-      {/* 1. Brand header */}
-      <header className="bg-slate-900 border-b border-slate-800 px-6 py-4 sticky top-0 z-50">
-        <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          
-          {/* Logo brand */}
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-[color:var(--restaurant-accent)] rounded-sm flex items-center justify-center text-[color:var(--restaurant-black)] font-bold font-mono shrink-0">
-              01
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="font-serif font-black text-lg text-[color:var(--restaurant-foreground)] tracking-tight uppercase">
-                  Royal Harvest
-                </h1>
-                <span className="text-[10px] bg-[color:var(--restaurant-accent-soft)] text-[color:var(--restaurant-accent)] border border-[color:var(--restaurant-border)] px-1.5 py-0.5 rounded font-mono font-bold tracking-wide">LIVE</span>
+      {activeTab !== 'splash' && (
+        <header className={`glass-nav px-6 py-4 sticky top-0 z-50 animate-fade-in ${isScrolled ? 'glass-nav-scrolled' : ''}`}>
+          <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            
+            {/* Logo brand & Hamburger row */}
+            <div className="flex items-center justify-between w-full lg:w-auto">
+              <div className="flex items-center gap-4 cursor-pointer select-none" onClick={() => { setActiveTab('welcome'); setIsMenuOpen(false); }}>
+                <div className="w-14 h-14 bg-slate-955/80 border-2 border-amber-500/20 rounded-xl flex items-center justify-center shrink-0 overflow-hidden hover:border-amber-500/50 transition-all duration-300">
+                  <img src={royalHarvestLogo} alt="Royal Harvest Logo" className="w-10 h-10 object-contain" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="font-serif font-black text-2xl text-[color:var(--restaurant-foreground)] tracking-tight uppercase hover:text-[color:var(--restaurant-accent)] transition-colors">
+                      Royal Harvest
+                    </h1>
+                    <span className="text-[10px] bg-[color:var(--restaurant-accent-soft)] text-[color:var(--restaurant-accent)] border border-[color:var(--restaurant-border)] px-1.5 py-0.5 rounded font-mono font-bold tracking-wide">LIVE</span>
+                  </div>
+                  <p className="text-[10px] text-[color:var(--restaurant-muted)] uppercase tracking-widest font-bold">Restaurant Console</p>
+                </div>
               </div>
-              <p className="text-[10px] text-[color:var(--restaurant-muted)] uppercase tracking-widest font-bold">Command Center</p>
+
+              {/* Mobile Hamburger toggle */}
+              <button
+                id="mobile-menu-toggle"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="lg:hidden p-2.5 text-[color:var(--restaurant-accent)] hover:text-white transition-colors focus:outline-none cursor-pointer"
+                aria-label="Toggle Navigation Menu"
+              >
+                {isMenuOpen ? (
+                  <svg className="w-6 h-6 text-[color:var(--restaurant-accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6 text-[color:var(--restaurant-accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                )}
+              </button>
             </div>
+
+            {/* Expandable navigation and metrics list */}
+            <div className={`${isMenuOpen ? 'flex flex-col w-full' : 'hidden'} lg:flex lg:flex-row lg:items-center lg:justify-between lg:flex-1 gap-6`}>
+              {/* Tab Selection Navigation pills */}
+              <nav className="flex flex-col lg:flex-row lg:items-center gap-1 bg-transparent font-sans w-full lg:w-auto">
+                <button
+                  id="tab-welcome"
+                  onClick={() => { setActiveTab('welcome'); setIsMenuOpen(false); }}
+                  className={`nav-link w-full lg:w-auto text-left lg:text-center ${activeTab === 'welcome' ? 'nav-link-active' : ''}`}
+                >
+                  Welcome
+                </button>
+
+                <button
+                  id="tab-simulator"
+                  onClick={() => { setActiveTab('simulator'); setIsMenuOpen(false); }}
+                  className={`nav-link w-full lg:w-auto text-left lg:text-center ${activeTab === 'simulator' ? 'nav-link-active' : ''}`}
+                >
+                  Unified Split View
+                </button>
+
+                <button
+                  id="tab-waiter"
+                  onClick={() => { setActiveTab('waiter'); setIsMenuOpen(false); }}
+                  className={`nav-link w-full lg:w-auto text-left lg:text-center ${activeTab === 'waiter' ? 'nav-link-active' : ''}`}
+                >
+                  Waiter Pad
+                </button>
+
+                <button
+                  id="tab-kitchen"
+                  onClick={() => { setActiveTab('kitchen'); setIsMenuOpen(false); }}
+                  className={`nav-link w-full lg:w-auto text-left lg:text-center ${activeTab === 'kitchen' ? 'nav-link-active' : ''}`}
+                >
+                  Kitchen (KDS)
+                </button>
+
+                <button
+                  id="tab-billing"
+                  onClick={() => { setActiveTab('billing'); setIsMenuOpen(false); }}
+                  className={`nav-link w-full lg:w-auto text-left lg:text-center ${activeTab === 'billing' ? 'nav-link-active' : ''}`}
+                >
+                  Billing Terminal
+                </button>
+
+                <button
+                  id="tab-testing"
+                  onClick={() => { setActiveTab('testing'); setIsMenuOpen(false); }}
+                  className={`nav-link w-full lg:w-auto text-left lg:text-center ${activeTab === 'testing' ? 'nav-link-active' : ''}`}
+                >
+                  Testing Suite
+                </button>
+
+                <button
+                  id="tab-specs"
+                  onClick={() => { setActiveTab('specs'); setIsMenuOpen(false); }}
+                  className={`nav-link w-full lg:w-auto text-left lg:text-center ${activeTab === 'specs' ? 'nav-link-active' : ''}`}
+                >
+                  Architecture
+                </button>
+
+                <button
+                  id="tab-design"
+                  onClick={() => { setActiveTab('design'); setIsMenuOpen(false); }}
+                  className={`nav-link w-full lg:w-auto text-left lg:text-center ${activeTab === 'design' ? 'nav-link-active' : ''}`}
+                >
+                  Design System
+                </button>
+              </nav>
+
+              {/* Right Metrics panel */}
+              <div className="flex lg:flex-row gap-6 items-center justify-between lg:justify-end w-full lg:w-auto pt-4 lg:pt-0 border-t border-slate-850 lg:border-t-0 mt-2 lg:mt-0">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">System Active</span>
+                </div>
+                <div className="hidden lg:block h-8 w-px bg-slate-850"></div>
+                <div className="text-right">
+                  <p className="text-[9px] text-slate-500 uppercase font-black">Current Load</p>
+                  <p className="text-xs font-mono font-bold text-slate-400">42.8ms LATENCY</p>
+                </div>
+              </div>
+            </div>
+
           </div>
-
-          {/* Tab Selection Navigation pills */}
-          <nav className="flex flex-wrap gap-1 bg-slate-950 p-1 border border-slate-800 rounded-md font-sans">
-            <button
-              id="tab-simulator"
-              onClick={() => setActiveTab('simulator')}
-              className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeTab === 'simulator'
-                  ? 'bg-slate-800 text-amber-300 border border-slate-700/60 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-              }`}
-            >
-              <Layers className="w-3.5 h-3.5" />
-              Unified Split View
-            </button>
-
-            <button
-              id="tab-waiter"
-              onClick={() => setActiveTab('waiter')}
-              className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeTab === 'waiter'
-                  ? 'bg-slate-800 text-amber-300 border border-slate-700/60 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-              }`}
-            >
-              <Smartphone className="w-3.5 h-3.5" />
-              Waiter Pad
-            </button>
-
-            <button
-              id="tab-kitchen"
-              onClick={() => setActiveTab('kitchen')}
-              className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeTab === 'kitchen'
-                  ? 'bg-slate-800 text-amber-300 border border-slate-700/60 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-              }`}
-            >
-              <ChefHat className="w-3.5 h-3.5" />
-              Kitchen (KDS)
-            </button>
-
-            <button
-              id="tab-billing"
-              onClick={() => setActiveTab('billing')}
-              className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeTab === 'billing'
-                  ? 'bg-slate-800 text-amber-300 border border-slate-700/60 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-              }`}
-            >
-              <Receipt className="w-3.5 h-3.5" />
-              Billing Terminal
-            </button>
-
-            <button
-              id="tab-testing"
-              onClick={() => setActiveTab('testing')}
-              className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeTab === 'testing'
-                  ? 'bg-slate-800 text-amber-300 border border-slate-700/60 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-              }`}
-            >
-              <Cpu className="w-3.5 h-3.5" />
-              Testing Suite
-            </button>
-
-            <button
-              id="tab-specs"
-              onClick={() => setActiveTab('specs')}
-              className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider rounded-sm flex items-center gap-1.5 transition-all cursor-pointer ${
-                activeTab === 'specs'
-                  ? 'bg-slate-800 text-amber-300 border border-slate-700/60 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-              }`}
-            >
-              <BookOpen className="w-3.5 h-3.5" />
-              Architecture
-            </button>
-          </nav>
-
-          {/* Right Metrics panel */}
-          <div className="hidden lg:flex gap-6 items-center">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">System Active</span>
-            </div>
-            <div className="h-8 w-px bg-slate-800"></div>
-            <div className="text-right">
-              <p className="text-[9px] text-slate-500 uppercase font-black">Current Load</p>
-              <p className="text-xs font-mono font-bold text-slate-400">42.8ms LATENCY</p>
-            </div>
-          </div>
-
-        </div>
-      </header>
+        </header>
+      )}
 
       {/* 2. Main content router body */}
       <main className="flex-1 w-full max-w-[1600px] mx-auto p-4 md:p-6 transition-all duration-300">
         
+        {/* TAB -1: SPLASH SCREEN */}
+        {activeTab === 'splash' && (
+          <div className="min-h-[70vh] flex flex-col items-center justify-center text-center p-6 animate-fade-in relative overflow-hidden select-none">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(223,183,80,0.06)_0%,transparent_60%)] pointer-events-none"></div>
+            <div className="space-y-8 relative z-10">
+              <div className="w-24 h-24 bg-slate-950/80 border border-[rgba(223,183,80,0.15)] rounded-full flex items-center justify-center mx-auto shadow-2xl animate-pulse">
+                <img src={royalHarvestLogo} alt="Royal Harvest" className="w-14 h-14 object-contain animate-pulse" />
+              </div>
+              <div className="space-y-4">
+                <h1 className="font-serif font-black text-5xl md:text-7xl text-[color:var(--restaurant-accent)] tracking-widest uppercase mb-2">
+                  Royal Harvest
+                </h1>
+                <p className="font-serif italic text-sm text-slate-400 tracking-widest uppercase">
+                  Artisanal Kitchen & Estate Dining
+                </p>
+              </div>
+              <div className="pt-6">
+                <div className="w-16 h-px bg-gradient-to-r from-transparent via-[color:var(--restaurant-accent)] to-transparent mx-auto"></div>
+                <p className="text-[10px] text-slate-500 font-mono mt-4 uppercase tracking-widest">
+                  Loading Operations Console in {countdown}s...
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 0: WELCOME LANDING */}
+        {activeTab === 'welcome' && (
+          <div className="space-y-24 animate-fade-in" id="welcome-container">
+            
+            {/* HERO SECTION */}
+            <section className="text-center py-20 px-4 relative overflow-hidden rounded-2xl bg-gradient-to-b from-[rgba(223,183,80,0.04)] to-transparent border border-[rgba(223,183,80,0.08)] shadow-2xl">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(223,183,80,0.04)_0%,transparent_70%)] pointer-events-none"></div>
+              
+              <div className="w-20 h-20 bg-slate-955/80 border border-amber-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl relative hover:border-amber-500/50 transition-colors duration-300">
+                <img src={royalHarvestLogo} alt="Royal Harvest Logo" className="w-14 h-14 object-contain animate-pulse" />
+              </div>
+              
+              <h1 className="font-serif font-black tracking-widest uppercase mb-4 text-slate-105">
+                Royal Harvest
+              </h1>
+              <p className="font-serif italic text-lg md:text-xl text-[color:var(--restaurant-accent)] max-w-2xl mx-auto mb-6 font-medium">
+                Artisanal Kitchen & Estate Dining
+              </p>
+              <div className="h-px w-24 bg-gradient-to-r from-transparent via-[color:var(--restaurant-accent)] to-transparent mx-auto mb-8"></div>
+              <p className="text-sm text-slate-400 max-w-xl mx-auto leading-relaxed mb-10 font-light">
+                Indulge in a premium farm-to-table culinary narrative. We craft seasonal, organic menus sourced straight from local fields and cook with artisanal passion in our estate kitchen.
+              </p>
+              
+              <div className="flex flex-wrap justify-center gap-4">
+                <a href="#reservation-section" className="btn-primary">
+                  Book A Table
+                </a>
+                <a href="#menu-section" className="btn-secondary">
+                  Explore Menu
+                </a>
+              </div>
+            </section>
+
+            {/* ABOUT / STORY SECTION */}
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center px-4" id="about-section">
+              <div className="space-y-6">
+                <span className="text-[10px] font-mono text-[color:var(--restaurant-accent)] tracking-widest uppercase font-bold">Our Philosophy</span>
+                <h2 className="text-slate-100 font-serif leading-tight">
+                  Crafting Timeless <br />Dining Legacies
+                </h2>
+                <div className="h-px w-16 bg-[color:var(--restaurant-accent)] opacity-40"></div>
+                <p className="text-sm text-slate-400 leading-relaxed font-light">
+                  Founded upon the principles of clean agriculture and traditional cookery, Royal Harvest bridges the gap between field and fork. Every ingredient is checked, every spice hand-roasted, and every plate crafted to tell the story of the earth it rose from.
+                </p>
+                <p className="text-sm text-slate-400 leading-relaxed font-light">
+                  We believe that dining is an active ritual of community, sharing, and delight. Our open woodfires, copper clay tandoors, and curated cellar collections offer guests a warm, sensory escape.
+                </p>
+              </div>
+              
+              <div className="zoom-img-container aspect-video rounded-lg border border-[rgba(223,183,80,0.1)] overflow-hidden bg-slate-900 shadow-xl">
+                <img 
+                  src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80" 
+                  alt="Fine dining table preparation" 
+                  className="zoom-img object-cover w-full h-full opacity-70"
+                />
+              </div>
+            </section>
+
+            {/* MENU SHOWCASE (CHEF'S SPECIALS) */}
+            <section className="space-y-8 px-4" id="menu-section">
+              <div className="text-center space-y-3">
+                <span className="text-[10px] font-mono text-[color:var(--restaurant-accent)] tracking-widest uppercase font-bold">Curated Selection</span>
+                <h2 className="text-slate-100 font-serif">Chef's Signature Specials</h2>
+                <div className="h-px w-16 bg-gradient-to-r from-transparent via-[color:var(--restaurant-accent)] to-transparent mx-auto"></div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Special 1: Butter Chicken */}
+                <div className="glass-card p-6 flex flex-col justify-between min-h-[360px] group">
+                  <div className="space-y-4">
+                    <div className="zoom-img-container h-44 rounded border border-[rgba(223,183,80,0.08)] bg-slate-950 overflow-hidden">
+                      <img 
+                        src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=600&q=80" 
+                        alt="Butter Chicken" 
+                        className="zoom-img opacity-85" 
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-serif font-black text-slate-105 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Butter Chicken</h4>
+                        <span className="text-xs font-mono text-[color:var(--restaurant-accent)] font-bold">₹520.00</span>
+                      </div>
+                      <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed font-light">
+                        Tender tandoor-roasted chicken stewed in a rich, buttery fresh tomato cream sauce infused with fenugreek.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="pt-4 border-t border-[rgba(223,183,80,0.08)] flex justify-between items-center text-[10px] font-mono uppercase text-slate-500">
+                    <span>Main Course</span>
+                    <span>15 min prep</span>
+                  </div>
+                </div>
+
+                {/* Special 2: Garlic Butter Prawns */}
+                <div className="glass-card p-6 flex flex-col justify-between min-h-[360px] group">
+                  <div className="space-y-4">
+                    <div className="zoom-img-container h-44 rounded border border-[rgba(223,183,80,0.08)] bg-slate-955 overflow-hidden">
+                      <img 
+                        src="https://images.unsplash.com/photo-1559742811-82410b510405?auto=format&fit=crop&w=600&q=80" 
+                        alt="Garlic Butter Prawns" 
+                        className="zoom-img opacity-85" 
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-serif font-black text-slate-105 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Butter Prawns</h4>
+                        <span className="text-xs font-mono text-[color:var(--restaurant-accent)] font-bold">₹680.00</span>
+                      </div>
+                      <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed font-light">
+                        Fresh jumbo tiger prawns tossed in hot garlic, creamed butter, fresh coriander, and a splash of estate lime.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="pt-4 border-t border-[rgba(223,183,80,0.08)] flex justify-between items-center text-[10px] font-mono uppercase text-slate-500">
+                    <span>Starters</span>
+                    <span>12 min prep</span>
+                  </div>
+                </div>
+
+                {/* Special 3: Rasmalai */}
+                <div className="glass-card p-6 flex flex-col justify-between min-h-[360px] group">
+                  <div className="space-y-4">
+                    <div className="zoom-img-container h-44 rounded border border-[rgba(223,183,80,0.08)] bg-slate-950 overflow-hidden">
+                      <img 
+                        src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80" 
+                        alt="Gourmet Rasmalai" 
+                        className="zoom-img opacity-85" 
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-serif font-black text-slate-105 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Royal Rasmalai</h4>
+                        <span className="text-xs font-mono text-[color:var(--restaurant-accent)] font-bold">₹240.00</span>
+                      </div>
+                      <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed font-light">
+                        Spongy cottage cheese patties soaked in saffron-infused milk syrup, garnished with pistachios and gold leaf.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="pt-4 border-t border-[rgba(223,183,80,0.08)] flex justify-between items-center text-[10px] font-mono uppercase text-slate-500">
+                    <span>Desserts</span>
+                    <span>8 min prep</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* TESTIMONIALS SECTION */}
+            <section className="space-y-8 px-4" id="testimonials-section">
+              <div className="text-center space-y-3">
+                <span className="text-[10px] font-mono text-[color:var(--restaurant-accent)] tracking-widest uppercase font-bold">Reviews</span>
+                <h2 className="text-slate-100 font-serif">Diner Impressions</h2>
+                <div className="h-px w-16 bg-gradient-to-r from-transparent via-[color:var(--restaurant-accent)] to-transparent mx-auto"></div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="glass-card p-6 space-y-4 text-left">
+                  <div className="text-amber-300 text-xs tracking-wider font-mono">★★★★★</div>
+                  <p className="text-xs text-slate-300 italic leading-relaxed font-light">
+                    "The estate dining ambiance is absolutely stunning. But the highlight is the farm-to-table cuisine — the spices are clean, fresh, and hand-roasted. Best lamb Rogan Josh in SF!"
+                  </p>
+                  <div className="pt-2 flex justify-between items-center text-[10px] font-mono text-slate-500 uppercase">
+                    <span>Lady Elizabeth Stirling</span>
+                    <span>May 2026</span>
+                  </div>
+                </div>
+
+                <div className="glass-card p-6 space-y-4 text-left">
+                  <div className="text-amber-300 text-xs tracking-wider font-mono">★★★★★</div>
+                  <p className="text-xs text-slate-300 italic leading-relaxed font-light">
+                    "Exceptional operations console. Our table was seated instantly after reserving online. Clean interface, real-time updates on kitchen dishes, and flawless cashier settlements."
+                  </p>
+                  <div className="pt-2 flex justify-between items-center text-[10px] font-mono text-slate-500 uppercase">
+                    <span>Chef Marcus Vance</span>
+                    <span>June 2026</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* RESERVATION SECTION */}
+            <section className="max-w-2xl mx-auto px-4 space-y-6" id="reservation-section">
+              <div className="text-center space-y-3">
+                <span className="text-[10px] font-mono text-[color:var(--restaurant-accent)] tracking-widest uppercase font-bold">Booking Request</span>
+                <h2 className="text-slate-100 font-serif">Reserve Your Estate Seating</h2>
+                <div className="h-px w-16 bg-gradient-to-r from-transparent via-[color:var(--restaurant-accent)] to-transparent mx-auto"></div>
+                <p className="text-xs text-slate-400 leading-relaxed font-light">
+                  Submit your request. The system will automatically check our 10 table capacities and lock a vacant slot.
+                </p>
+              </div>
+
+              <form onSubmit={handleMakeReservation} className="glass-card p-8 space-y-4 rounded-lg text-left">
+                {reserveError && (
+                  <div className="bg-red-955/20 border border-red-900/40 p-3 text-xs text-red-400 text-center uppercase tracking-wide">
+                    {reserveError}
+                  </div>
+                )}
+                
+                {reserveMessage && (
+                  <div className="bg-emerald-950/30 border border-emerald-900/60 p-3 text-xs text-emerald-400 text-center uppercase tracking-wide">
+                    {reserveMessage}
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-1.5 font-bold">Full Name</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Stirling"
+                      value={reserveName}
+                      onChange={(e) => setReserveName(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 text-xs px-3 py-2 text-slate-200 focus:outline-none focus:border-[color:var(--restaurant-accent)] font-sans"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-1.5 font-bold">Number of Guests</label>
+                    <select 
+                      value={reserveGuests}
+                      onChange={(e) => setReserveGuests(parseInt(e.target.value))}
+                      className="w-full bg-slate-950 border border-slate-800 text-xs px-3 py-2 text-slate-200 focus:outline-none focus:border-[color:var(--restaurant-accent)] font-sans"
+                    >
+                      <option value={2}>2 Guests (Table Slot)</option>
+                      <option value={4}>4 Guests (Table Slot)</option>
+                      <option value={6}>6 Guests (Table Slot)</option>
+                      <option value={8}>8 Guests (Table Slot)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-1.5 font-bold">Reservation Date</label>
+                    <input 
+                      type="date"
+                      value={reserveDate}
+                      onChange={(e) => setReserveDate(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 text-xs px-3 py-2 text-slate-200 focus:outline-none focus:border-[color:var(--restaurant-accent)] font-sans"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-1.5 font-bold">Preferred Time</label>
+                    <input 
+                      type="time"
+                      value={reserveTime}
+                      onChange={(e) => setReserveTime(e.target.value)}
+                      className="w-full bg-slate-950 border border-slate-800 text-xs px-3 py-2 text-slate-200 focus:outline-none focus:border-[color:var(--restaurant-accent)] font-sans"
+                    />
+                  </div>
+                </div>
+
+                <button type="submit" className="w-full btn-primary mt-4">
+                  Request Reservation Confirm
+                </button>
+              </form>
+            </section>
+
+            {/* OPERATIONS COCKPIT ACCESS */}
+            <section className="space-y-6 px-4">
+              <div className="text-center space-y-2">
+                <span className="text-[10px] font-mono text-[color:var(--restaurant-accent)] tracking-widest uppercase font-bold">Management</span>
+                <h3 className="font-serif font-black text-slate-200 uppercase tracking-wider">Operations Dashboard Hub</h3>
+                <div className="h-px w-16 bg-gradient-to-r from-transparent via-[color:var(--restaurant-accent)] to-transparent mx-auto"></div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 text-left">
+                {/* Split view link */}
+                <button
+                  onClick={() => setActiveTab('simulator')}
+                  className="glass-card p-6 text-left group cursor-pointer hover:-translate-y-0.5 duration-200"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-amber-955/40 text-amber-400 flex items-center justify-center mb-4 border border-amber-900/30 group-hover:border-amber-500/40 transition-colors">
+                    <Layers className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-serif font-black text-slate-200 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Unified Split view</h4>
+                  <p className="text-[11px] text-slate-400 mt-2 font-light leading-relaxed">
+                    Check all 3 operational panels side-by-side in real-time. Waiter, chef, and cashier dashboard.
+                  </p>
+                </button>
+
+                {/* Waiter station link */}
+                <button
+                  onClick={() => setActiveTab('waiter')}
+                  className="glass-card p-6 text-left group cursor-pointer hover:-translate-y-0.5 duration-200"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-amber-955/40 text-amber-400 flex items-center justify-center mb-4 border border-amber-900/30 group-hover:border-amber-500/40 transition-colors">
+                    <Smartphone className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-serif font-black text-slate-200 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Waiter Station</h4>
+                  <p className="text-[11px] text-slate-400 mt-2 font-light leading-relaxed">
+                    Launch order pad to allocate seating, record course choices, and check active food items.
+                  </p>
+                </button>
+
+                {/* Kitchen display KDS link */}
+                <button
+                  onClick={() => setActiveTab('kitchen')}
+                  className="glass-card p-6 text-left group cursor-pointer hover:-translate-y-0.5 duration-200"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-amber-955/40 text-amber-400 flex items-center justify-center mb-4 border border-amber-900/30 group-hover:border-amber-500/40 transition-colors">
+                    <ChefHat className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-serif font-black text-slate-200 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Kitchen Monitor (KDS)</h4>
+                  <p className="text-[11px] text-slate-400 mt-2 font-light leading-relaxed">
+                    Monitor active cook queues, read chef guidelines, and check off prepared items in sequence.
+                  </p>
+                </button>
+
+                {/* Cashier Billing link */}
+                <button
+                  onClick={() => setActiveTab('billing')}
+                  className="glass-card p-6 text-left group cursor-pointer hover:-translate-y-0.5 duration-200"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-amber-955/40 text-amber-400 flex items-center justify-center mb-4 border border-amber-900/30 group-hover:border-amber-500/40 transition-colors">
+                    <Receipt className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-serif font-black text-slate-200 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Cashier Desk</h4>
+                  <p className="text-[11px] text-slate-400 mt-2 font-light leading-relaxed">
+                    Retrieve guest bills, select payment gateway registers, check daily logs, and view stock alerts.
+                  </p>
+                </button>
+
+                {/* Testing suite link */}
+                <button
+                  onClick={() => setActiveTab('testing')}
+                  className="glass-card p-6 text-left group cursor-pointer hover:-translate-y-0.5 duration-200"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-amber-955/40 text-amber-400 flex items-center justify-center mb-4 border border-amber-900/30 group-hover:border-amber-500/40 transition-colors">
+                    <Cpu className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-serif font-black text-slate-200 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Testing Console</h4>
+                  <p className="text-[11px] text-slate-400 mt-2 font-light leading-relaxed">
+                    Auto-simulate load runs across multiple tables, inject seed datasets, and run assertion logs.
+                  </p>
+                </button>
+
+                {/* Architecture specs link */}
+                <button
+                  onClick={() => setActiveTab('specs')}
+                  className="glass-card p-6 text-left group cursor-pointer hover:-translate-y-0.5 duration-200"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-amber-955/40 text-amber-400 flex items-center justify-center mb-4 border border-amber-900/30 group-hover:border-amber-500/40 transition-colors">
+                    <BookOpen className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-serif font-black text-slate-200 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Architecture Blueprints</h4>
+                  <p className="text-[11px] text-slate-400 mt-2 font-light leading-relaxed">
+                    Examine system specifications, database constraints, environment files, and local state maps.
+                  </p>
+                </button>
+
+                {/* Design System link */}
+                <button
+                  onClick={() => setActiveTab('design')}
+                  className="glass-card p-6 text-left group cursor-pointer hover:-translate-y-0.5 duration-200"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-amber-955/40 text-amber-400 flex items-center justify-center mb-4 border border-amber-900/30 group-hover:border-amber-500/40 transition-colors">
+                    <Sparkles className="w-5 h-5" />
+                  </div>
+                  <h4 className="font-serif font-black text-slate-200 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Design System Spec</h4>
+                  <p className="text-[11px] text-slate-400 mt-2 font-light leading-relaxed">
+                    View the visual typography, color palette click-to-copy, custom buttons, card layouts, and developer config setups.
+                  </p>
+                </button>
+              </div>
+            </section>
+
+            {/* MINIMAL FOOTER IN WELCOME LANDING */}
+            <footer className="border-t border-[rgba(223,183,80,0.08)] pt-12 pb-6 space-y-8 font-sans">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left text-xs">
+                <div className="space-y-3">
+                  <h4 className="font-serif font-black text-sm uppercase text-[color:var(--restaurant-accent)] tracking-wider">Royal Harvest</h4>
+                  <p className="text-slate-400 leading-relaxed font-light">
+                    An organic estate kitchen and fine dining restaurant designed to nurture community, traditional cookery, and seasonal local harvests.
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  <h4 className="font-sans font-bold text-slate-300 uppercase tracking-widest text-[10px]">Dining Hours</h4>
+                  <div className="space-y-1.5 text-slate-400 font-light font-mono text-[11px]">
+                    <div className="flex justify-between"><span>Wed – Thu</span><span>17:00 – 22:00</span></div>
+                    <div className="flex justify-between"><span>Fri – Sat</span><span>17:00 – 23:00</span></div>
+                    <div className="flex justify-between"><span>Sunday Brunch</span><span>11:00 – 15:00</span></div>
+                  </div>
+                </div>
+
+                <div className="space-y-3 font-sans">
+                  <h4 className="font-sans font-bold text-slate-300 uppercase tracking-widest text-[10px]">Estate Location</h4>
+                  <p className="text-slate-400 leading-normal font-light">
+                    12th Ave Gourmet Boulevard,<br />
+                    Oakwood Estate Plains, CA 94025
+                  </p>
+                  <p className="text-[11px] font-mono text-[color:var(--restaurant-accent)]">
+                    Direct Line: +1 (555) 769-2544
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-6 border-t border-[rgba(223,183,80,0.04)] text-center text-[10px] font-mono text-slate-550 uppercase tracking-widest">
+                <span>© 2026 Royal Harvest Inc. • Handcrafted Estate Dining Experience</span>
+              </div>
+            </footer>
+
+          </div>
+        )}
+
         {/* TAB 1: SIMULATOR (Side-by-side terminal playground!) */}
         {activeTab === 'simulator' && (
           <div className="space-y-8" id="simulator-container">
@@ -579,11 +1127,19 @@ export default function App() {
           </div>
         )}
 
+        {/* TAB 7: DESIGN SYSTEM SHOWROOM */}
+        {activeTab === 'design' && (
+          <div className="animate-fade-in">
+            <DesignSystem />
+          </div>
+        )}
+
       </main>
 
       {/* 3. Bottom Architecture & System Specs Rail */}
-      <footer className="bg-slate-900 text-slate-400 p-6 md:p-8 border-t border-slate-700 mt-16 font-sans">
-        <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-12 justify-between text-left">
+      {activeTab !== 'splash' && (
+        <footer className="bg-slate-900 text-slate-400 p-6 md:p-8 border-t border-slate-700 mt-16 font-sans">
+          <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-12 justify-between text-left">
           
           <div className="flex-none lg:w-56 space-y-2">
             <h3 className="text-white text-[10px] font-bold uppercase tracking-widest">Active Data Schema</h3>
@@ -637,7 +1193,8 @@ export default function App() {
             CI Build: Green <span className="inline-block bg-emerald-500 rounded-full w-2 h-2 animate-pulse"></span>
           </p>
         </div>
-     </footer>
+       </footer>
+      )}
 
     </div>
   );

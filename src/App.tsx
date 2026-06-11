@@ -541,7 +541,7 @@ export default function App() {
                 <img src={royalHarvestLogo} alt="Royal Harvest Logo" className="w-14 h-14 object-contain animate-pulse" />
               </div>
               
-              <h1 className="font-serif font-black tracking-widest uppercase mb-4 text-slate-105">
+              <h1 className="font-serif font-black tracking-widest uppercase mb-4 text-slate-100">
                 Royal Harvest
               </h1>
               <p className="font-serif italic text-lg md:text-xl text-[color:var(--restaurant-accent)] max-w-2xl mx-auto mb-6 font-medium">
@@ -608,7 +608,7 @@ export default function App() {
                     </div>
                     <div>
                       <div className="flex items-center justify-between">
-                        <h4 className="font-serif font-black text-slate-105 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Butter Chicken</h4>
+                        <h4 className="font-serif font-black text-slate-100 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Butter Chicken</h4>
                         <span className="text-xs font-mono text-[color:var(--restaurant-accent)] font-bold">₹520.00</span>
                       </div>
                       <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed font-light">
@@ -634,7 +634,7 @@ export default function App() {
                     </div>
                     <div>
                       <div className="flex items-center justify-between">
-                        <h4 className="font-serif font-black text-slate-105 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Butter Prawns</h4>
+                        <h4 className="font-serif font-black text-slate-100 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Butter Prawns</h4>
                         <span className="text-xs font-mono text-[color:var(--restaurant-accent)] font-bold">₹680.00</span>
                       </div>
                       <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed font-light">
@@ -660,7 +660,7 @@ export default function App() {
                     </div>
                     <div>
                       <div className="flex items-center justify-between">
-                        <h4 className="font-serif font-black text-slate-105 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Royal Rasmalai</h4>
+                        <h4 className="font-serif font-black text-slate-100 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Royal Rasmalai</h4>
                         <span className="text-xs font-mono text-[color:var(--restaurant-accent)] font-bold">₹240.00</span>
                       </div>
                       <p className="text-xs text-slate-400 mt-2 line-clamp-2 leading-relaxed font-light">
@@ -889,7 +889,7 @@ export default function App() {
                   <div className="w-10 h-10 rounded-lg bg-amber-955/40 text-amber-400 flex items-center justify-center mb-4 border border-amber-900/30 group-hover:border-amber-500/40 transition-colors">
                     <Sparkles className="w-5 h-5" />
                   </div>
-                  <h4 className="font-serif font-black text-slate-200 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Design System Spec</h4>
+                  <h4 className="font-serif font-black text-slate-100 uppercase tracking-wide group-hover:text-[color:var(--restaurant-accent)] transition-colors">Design System Spec</h4>
                   <p className="text-[11px] text-slate-400 mt-2 font-light leading-relaxed">
                     View the visual typography, color palette click-to-copy, custom buttons, card layouts, and developer config setups.
                   </p>
@@ -897,41 +897,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* MINIMAL FOOTER IN WELCOME LANDING */}
-            <footer className="border-t border-[rgba(223,183,80,0.08)] pt-12 pb-6 space-y-8 font-sans">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left text-xs">
-                <div className="space-y-3">
-                  <h4 className="font-serif font-black text-sm uppercase text-[color:var(--restaurant-accent)] tracking-wider">Royal Harvest</h4>
-                  <p className="text-slate-400 leading-relaxed font-light">
-                    An organic estate kitchen and fine dining restaurant designed to nurture community, traditional cookery, and seasonal local harvests.
-                  </p>
-                </div>
-                
-                <div className="space-y-3">
-                  <h4 className="font-sans font-bold text-slate-300 uppercase tracking-widest text-[10px]">Dining Hours</h4>
-                  <div className="space-y-1.5 text-slate-400 font-light font-mono text-[11px]">
-                    <div className="flex justify-between"><span>Wed – Thu</span><span>17:00 – 22:00</span></div>
-                    <div className="flex justify-between"><span>Fri – Sat</span><span>17:00 – 23:00</span></div>
-                    <div className="flex justify-between"><span>Sunday Brunch</span><span>11:00 – 15:00</span></div>
-                  </div>
-                </div>
 
-                <div className="space-y-3 font-sans">
-                  <h4 className="font-sans font-bold text-slate-300 uppercase tracking-widest text-[10px]">Estate Location</h4>
-                  <p className="text-slate-400 leading-normal font-light">
-                    12th Ave Gourmet Boulevard,<br />
-                    Oakwood Estate Plains, CA 94025
-                  </p>
-                  <p className="text-[11px] font-mono text-[color:var(--restaurant-accent)]">
-                    Direct Line: +1 (555) 769-2544
-                  </p>
-                </div>
-              </div>
-
-              <div className="pt-6 border-t border-[rgba(223,183,80,0.04)] text-center text-[10px] font-mono text-slate-550 uppercase tracking-widest">
-                <span>© 2026 Royal Harvest Inc. • Handcrafted Estate Dining Experience</span>
-              </div>
-            </footer>
 
           </div>
         )}

@@ -374,24 +374,16 @@ p {
 
 
 /* Overrides for standard tailwind components */
-.bg-slate-955,
-.bg-slate-950,
-.bg-slate-900,
-.bg-slate-950\/40,
-.bg-slate-950\/20,
-.bg-slate-950\/80,
-.bg-slate-900\/40,
-.bg-slate-900\/20 {
+[class*="bg-slate-9"] {
   background-color: var(--restaurant-surface) !important;
 }
 
-.border-slate-800,
-.border-slate-850,
-.border-slate-700 {
+[class*="border-slate-8"],
+[class*="border-slate-7"] {
   border-color: var(--restaurant-border) !important;
 }
 
-.text-slate-100,
+[class*="text-slate-1"],
 .text-white {
   color: var(--restaurant-foreground) !important;
 }
@@ -400,26 +392,21 @@ p {
   color: rgba(0, 0, 0, 0.9) !important;
 }
 
-.text-slate-305,
-.text-slate-300,
-.text-slate-400,
-.text-slate-500 {
+[class*="text-slate-3"],
+[class*="text-slate-4"],
+[class*="text-slate-5"] {
   color: var(--restaurant-muted) !important;
 }
 
-.text-slate-650,
-.text-slate-600,
-.text-slate-700,
-.text-slate-950 {
+[class*="text-slate-6"],
+[class*="text-slate-7"],
+[class*="text-slate-8"],
+[class*="text-slate-9"] {
   color: var(--restaurant-muted-strong) !important;
 }
 
-.bg-amber-650,
-.bg-amber-600,
-.bg-amber-505,
-.bg-amber-500,
-.bg-amber-700,
-.bg-amber-800 {
+[class*="bg-amber-6"],
+[class*="bg-amber-5"] {
   background-color: var(--restaurant-accent) !important;
   color: var(--restaurant-black) !important;
 }
@@ -440,40 +427,31 @@ p {
   border-color: var(--restaurant-accent) !important;
 }
 
-.bg-amber-955\/40,
-.bg-amber-955\/20,
-.bg-amber-955\/80 {
+[class*="bg-amber-955"] {
   background-color: var(--restaurant-accent-soft) !important;
 }
 
 /* Light Mode Badge Colors overrides to prevent dark backgrounds */
-.bg-emerald-950\/80,
-.bg-emerald-950\/20,
-.bg-emerald-950\/40,
-.bg-emerald-600,
-.bg-emerald-700,
-.bg-emerald-800 {
+[class*="bg-emerald-950"],
+[class*="bg-emerald-6"],
+[class*="bg-emerald-7"],
+[class*="bg-emerald-8"] {
   background-color: rgba(16, 185, 129, 0.08) !important;
   color: #047857 !important;
   border: 1px solid rgba(16, 185, 129, 0.25) !important;
 }
 
-.bg-red-950\/50,
-.bg-red-950\/80,
-.bg-red-950\/40,
-.bg-red-950\/20,
-.bg-red-600,
-.bg-red-700,
-.bg-red-800 {
+[class*="bg-red-950"],
+[class*="bg-red-955"],
+[class*="bg-red-6"],
+[class*="bg-red-7"],
+[class*="bg-red-8"] {
   background-color: rgba(239, 68, 68, 0.08) !important;
   color: #b91c1c !important;
   border: 1px solid rgba(239, 68, 68, 0.25) !important;
 }
 
-.bg-amber-950\/30,
-.bg-amber-950\/80,
-.bg-amber-950\/70,
-.bg-amber-950\/50 {
+[class*="bg-amber-950"] {
   background-color: var(--restaurant-accent-soft) !important;
   color: var(--restaurant-accent) !important;
   border: 1px solid var(--restaurant-border-strong) !important;

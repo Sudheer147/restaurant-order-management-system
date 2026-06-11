@@ -1136,64 +1136,111 @@ export default function App() {
 
       </main>
 
-      {/* 3. Bottom Architecture & System Specs Rail */}
+      {/* 3. Bottom Footer Router based on active tab */}
       {activeTab !== 'splash' && (
-        <footer className="bg-slate-900 text-slate-400 p-6 md:p-8 border-t border-slate-700 mt-16 font-sans">
-          <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-12 justify-between text-left">
-          
-          <div className="flex-none lg:w-56 space-y-2">
-            <h3 className="text-white text-[10px] font-bold uppercase tracking-widest">Active Data Schema</h3>
-            <div className="font-mono text-[9px] space-y-1.5 opacity-70">
-              <p>ID: STRING [PK]</p>
-              <p>ITEMS: ARRAY_OF_COURSES</p>
-              <p>STATUS: 'Ordered' | 'Preparing' | 'Ready'</p>
-              <p>TIMESTAMP: DATE_ISO8601</p>
-            </div>
-          </div>
-
-          <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="space-y-2">
-              <h3 className="text-white text-[10px] font-bold uppercase tracking-widest">CI/CD Pipeline</h3>
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-1 bg-slate-700 rounded-full overflow-hidden">
-                  <div className="w-3/4 h-full bg-emerald-600"></div>
-                </div>
-                <span className="text-[9px] font-mono">75% TEST COVERAGE</span>
+        activeTab === 'welcome' ? (
+          <footer className="bg-[color:var(--restaurant-bg)] text-[color:var(--restaurant-foreground)] p-8 md:p-12 border-t-2 border-[color:var(--restaurant-accent)] mt-24 font-sans">
+            <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+              {/* Brand Column */}
+              <div className="space-y-4">
+                <h3 className="font-serif font-black text-xl uppercase tracking-widest text-[color:var(--restaurant-accent)]">
+                  Royal Harvest
+                </h3>
+                <p className="text-xs text-[color:var(--restaurant-muted)] leading-relaxed">
+                  An artisanal estate dining concept celebrating seasonal organic ingredients, cooked with open flames and woodfires.
+                </p>
               </div>
-              <p className="text-[9px] mt-2 leading-relaxed italic text-slate-500">Automated deployment via GitHub Actions triggers on push to main branch with staging gate.</p>
+              {/* Hours Column */}
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-[color:var(--restaurant-foreground)]">Hours of Dining</h4>
+                <div className="text-xs text-[color:var(--restaurant-muted)] space-y-1">
+                  <p>Wednesday - Sunday</p>
+                  <p className="font-bold text-[color:var(--restaurant-foreground)]">12:00 PM - 11:00 PM</p>
+                  <p>Closed Monday & Tuesday</p>
+                </div>
+              </div>
+              {/* Contact Column */}
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-[color:var(--restaurant-foreground)]">Reservations & Location</h4>
+                <div className="text-xs text-[color:var(--restaurant-muted)] space-y-1">
+                  <p>100 Estate Drive, Vineyard Hills</p>
+                  <p>Phone: +91 98765 43210</p>
+                  <p className="hover:text-[color:var(--restaurant-accent)] transition-colors cursor-pointer">reservations@royalharvest.com</p>
+                </div>
+              </div>
+              {/* Quick Links Column */}
+              <div className="space-y-3">
+                <h4 className="text-[10px] font-bold uppercase tracking-widest text-[color:var(--restaurant-foreground)]">Operations Console</h4>
+                <div className="text-xs text-[color:var(--restaurant-muted)] space-y-2 flex flex-col items-start">
+                  <button onClick={() => { setActiveTab('waiter'); window.scrollTo(0, 0); }} className="hover:text-[color:var(--restaurant-accent)] transition-colors cursor-pointer">Waiter Pad</button>
+                  <button onClick={() => { setActiveTab('kitchen'); window.scrollTo(0, 0); }} className="hover:text-[color:var(--restaurant-accent)] transition-colors cursor-pointer">Kitchen Display</button>
+                  <button onClick={() => { setActiveTab('billing'); window.scrollTo(0, 0); }} className="hover:text-[color:var(--restaurant-accent)] transition-colors cursor-pointer">Billing Terminal</button>
+                </div>
+              </div>
             </div>
-
-            <div className="space-y-2">
-              <h3 className="text-white text-[10px] font-bold uppercase tracking-widest">Edge Case Logic</h3>
-              <p className="text-[9px] leading-relaxed text-slate-400">
-                • <span className="text-white">Stock Exhaust:</span> Mid-order lock with Toast alerting.<br />
-                • <span className="text-white">Empty Table:</span> Form validation blocks receipting.<br />
-                • <span className="text-white">Active Sync:</span> Cross-tab storage coordination.
+            <div className="max-w-[1600px] mx-auto mt-12 pt-6 border-t border-[color:var(--restaurant-border)] flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] font-mono text-[color:var(--restaurant-muted)]">
+              <p>© {new Date().getFullYear()} Royal Harvest Estate. All rights reserved.</p>
+              <p className="flex items-center gap-1.5 justify-center">
+                Style: Premium Light Mode <span className="inline-block bg-[color:var(--restaurant-accent)] rounded-full w-2 h-2 animate-pulse"></span>
               </p>
             </div>
-
-            <div className="space-y-2">
-              <h3 className="text-white text-[10px] font-bold uppercase tracking-widest font-sans">Monitoring Metrics</h3>
-              <div className="flex justify-between items-end border-b border-slate-700 pb-1 mb-1">
-                <span className="text-[9px]">Avg Prep Time</span>
-                <span className="text-[10px] text-white font-bold font-mono">12.4m</span>
+          </footer>
+        ) : (
+          <footer className="bg-[color:var(--restaurant-bg)] text-[color:var(--restaurant-foreground)] p-6 md:p-8 border-t border-[color:var(--restaurant-border)] mt-16 font-sans">
+            <div className="max-w-[1600px] mx-auto flex flex-col lg:flex-row gap-12 justify-between text-left">
+              <div className="flex-none lg:w-56 space-y-2">
+                <h3 className="text-[color:var(--restaurant-foreground)] text-[10px] font-bold uppercase tracking-widest">Active Data Schema</h3>
+                <div className="font-mono text-[9px] space-y-1.5 text-[color:var(--restaurant-muted)]">
+                  <p>ID: STRING [PK]</p>
+                  <p>ITEMS: ARRAY_OF_COURSES</p>
+                  <p>STATUS: 'Ordered' | 'Preparing' | 'Ready'</p>
+                  <p>TIMESTAMP: DATE_ISO8601</p>
+                </div>
               </div>
-              <div className="text-right flex justify-between items-end border-b border-slate-700 pb-0.5 mt-1 font-mono">
-                <span className="text-[9px] font-sans">Table Turnover</span>
-                <span className="block text-[10px] text-white font-bold">54.2m RUNTIME</span>
+
+              <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="space-y-2">
+                  <h3 className="text-[color:var(--restaurant-foreground)] text-[10px] font-bold uppercase tracking-widest">CI/CD Pipeline</h3>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-1 bg-[color:var(--restaurant-panel)] rounded-full overflow-hidden">
+                      <div className="w-3/4 h-full bg-[color:var(--restaurant-accent)]"></div>
+                    </div>
+                    <span className="text-[9px] font-mono text-[color:var(--restaurant-foreground)]">75% TEST COVERAGE</span>
+                  </div>
+                  <p className="text-[9px] mt-2 leading-relaxed italic text-[color:var(--restaurant-muted)]">Automated deployment via GitHub Actions triggers on push to main branch with staging gate.</p>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-[color:var(--restaurant-foreground)] text-[10px] font-bold uppercase tracking-widest">Edge Case Logic</h3>
+                  <p className="text-[9px] leading-relaxed text-[color:var(--restaurant-muted)]">
+                    • <span className="text-[color:var(--restaurant-foreground)] font-semibold">Stock Exhaust:</span> Mid-order lock with Toast alerting.<br />
+                    • <span className="text-[color:var(--restaurant-foreground)] font-semibold">Empty Table:</span> Form validation blocks receipting.<br />
+                    • <span className="text-[color:var(--restaurant-foreground)] font-semibold">Active Sync:</span> Cross-tab storage coordination.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <h3 className="text-[color:var(--restaurant-foreground)] text-[10px] font-bold uppercase tracking-widest font-sans">Monitoring Metrics</h3>
+                  <div className="flex justify-between items-end border-b border-[color:var(--restaurant-border)] pb-1 mb-1 text-[color:var(--restaurant-muted)]">
+                    <span className="text-[9px]">Avg Prep Time</span>
+                    <span className="text-[10px] text-[color:var(--restaurant-foreground)] font-bold font-mono">12.4m</span>
+                  </div>
+                  <div className="text-right flex justify-between items-end border-b border-[color:var(--restaurant-border)] pb-0.5 mt-1 font-mono text-[color:var(--restaurant-muted)]">
+                    <span className="text-[9px] font-sans">Table Turnover</span>
+                    <span className="block text-[10px] text-[color:var(--restaurant-foreground)] font-bold">54.2m RUNTIME</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          
-        </div>
-        
-        <div className="max-w-[1600px] mx-auto mt-8 pt-4 border-t border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] font-mono text-slate-500">
-          <p>Project 01: Royal Harvest • Restaurant Operations Dashboard • Handcrafted in 2026</p>
-          <p className="flex items-center gap-1.5 justify-center">
-            CI Build: Green <span className="inline-block bg-emerald-500 rounded-full w-2 h-2 animate-pulse"></span>
-          </p>
-        </div>
-       </footer>
+            
+            <div className="max-w-[1600px] mx-auto mt-8 pt-4 border-t border-[color:var(--restaurant-border)] flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] font-mono text-[color:var(--restaurant-muted)]">
+              <p>Project 01: Royal Harvest • Restaurant Operations Console • Handcrafted in 2026</p>
+              <p className="flex items-center gap-1.5 justify-center">
+                CI Build: Green <span className="inline-block bg-emerald-500 rounded-full w-2 h-2 animate-pulse"></span>
+              </p>
+            </div>
+          </footer>
+        )
       )}
 
     </div>
